@@ -1,15 +1,12 @@
 package com.huawei.android.app
 
-import android.app.AndroidAppHelper
 import android.app.Notification
 import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import de.robv.android.xposed.XposedHelpers
-import one.yufz.hmspush.IS_SYSTEM_HOOK_READY
 import one.yufz.hmspush.PushHistory
 import one.yufz.hmspush.XLog
-import one.yufz.hmspush.callMethod
+import one.yufz.hmspush.isSystemHookReady
 import java.lang.reflect.InvocationTargetException
 
 object NotificationManagerEx {
@@ -21,8 +18,7 @@ object NotificationManagerEx {
     private val notificationManager: INotificationManager = createNotificationManager()
 
     private fun createNotificationManager(): INotificationManager {
-        val nm = AndroidAppHelper.currentApplication().getSystemService(NotificationManager::class.java)
-        return if (nm.callMethod("isSystemConditionProviderEnabled", IS_SYSTEM_HOOK_READY) as Boolean) {
+        return if (isSystemHookReady) {
             XLog.d(TAG, "use SystemNotificationManager")
             SystemNotificationManager()
         } else {

@@ -51,14 +51,13 @@ class HookHMS {
                 }
             }
         }
-
         HookSettings().hook(lpparam.classLoader)
 
         if (Build.VERSION.SDK_INT >= 33) {
             CursorWindow::class.java["sCursorWindowSize"] = 1024 * 1024 * 8
         }
+        fakeFingerprint(lpparam)
     }
-
 
     private fun hookLegacyPush(classLoader: ClassLoader) {
         XLog.d(TAG, "hookLegacyPush() called with: classLoader = $classLoader")
@@ -72,5 +71,21 @@ class HookHMS {
                 }
             }
         }
+    }
+
+    private fun fakeFingerprint(lpparam: XC_LoadPackage.LoadPackageParam) {
+        lpparam.classLoader.findClass("com.huawei.hms.auth.api.CheckFingerprintRequest")
+            .hookMethod("parseEntity", String::class.java) {
+                doBefore {
+                    if (!isSystemHookReady) {
+                        val request = args[0] as String
+                        if (request.contains("auth.checkFingerprint")) {
+                            val response = """{"header":{"auth_rtnCode":"0"},"body":{}}"""
+                            thisObject.callMethod("call", response)
+                            result = null
+                        }
+                    }
+                }
+            }
     }
 }

@@ -1,8 +1,10 @@
 package one.yufz.hmspush.fakedevice
 
+import android.app.Application
 import android.os.Build
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.*
+import one.yufz.hmspush.set
 
 class Common : IFakeDevice {
     companion object {
@@ -46,6 +48,13 @@ class Common : IFakeDevice {
             }
         }
 
+        Application::class.java.hookMethod("onCreate") {
+            doAfter {
+                if (!isSystemHookReady) {
+                    FakeHmsSignature.hook(lpparam)
+                }
+            }
+        }
         return true
     }
 }
