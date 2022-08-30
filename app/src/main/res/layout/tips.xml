@@ -8,10 +8,10 @@
     >
 
     <TextView
+        android:id="@+id/tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="HMS Core 未安装或没有权限访问"
         android:textColor="?android:attr/colorPrimary"
         />
 </FrameLayout>

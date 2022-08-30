@@ -57,8 +57,12 @@ class HookSettings {
 
                 XLog.d(TAG, "finish() called, hmsPushSetting = $hmsPushSetting , ignoreFirstFinish = $ignoreFirstFinish")
 
-                if (hmsPushSetting && ignoreFirstFinish) {
-                    result = null
+                if (hmsPushSetting) {
+                    if (ignoreFirstFinish) {
+                        result = null
+                    } else {
+                        activity.setResult(Activity.RESULT_OK)
+                    }
                 }
 
                 if (ignoreFirstFinish) {
